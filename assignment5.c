@@ -23,3 +23,12 @@ void queue_initialize (prod_cons_queue *q){
 
 void queue_add( prod_cons_queue *q, int element);
 int queue_remove( prod_cons_queue *q);
+
+void queue_add( prod_cons_queue *q, int element){
+	q[q.tail + 1]
+}
+
+
+void queue_remove( prod_cons_queue *q){
+	
+}
