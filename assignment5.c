@@ -7,6 +7,7 @@
 #define MAX_QUEUE_SIZE 20
 
 pthread_mutex_t mutex;
+pthread_cond_t condc, condp;
 
 typedef struct queue{
 	int element[MAX_QUEUE_SIZE];
@@ -15,6 +16,12 @@ typedef struct queue{
 	uint8_t remaining_elements;
 	//additional var here
 } prod_cons_queue;
+
+int main(){
+	
+	return 0;
+}
+
 void queue_initialize (prod_cons_queue *q){
 	for(int = 0;i< 20;i++){
 		element[i] = null;
@@ -27,7 +34,6 @@ void queue_add( prod_cons_queue *q, int element);
 int queue_remove( prod_cons_queue *q);
 
 void queue_add( prod_cons_queue *q, int element){
-	pthread_mutex_lock(mutex);
 	if(q->remaining_elements == 20){	
 		if(tail < 19){
 			q->element[q->tail + 1] = element;
@@ -38,21 +44,31 @@ void queue_add( prod_cons_queue *q, int element){
 		}
 		q->remaining_elements ++;
 	}
-	pthread_mutex_unlock(mutex);
+
 }
 
 
 void queue_remove( prod_cons_queue *q){
-	pthread_mutex_lock(mutex);
 	if(q->remaining_elements != 0){
-		q->head += 1;
-		remaining_elements -= 1;
+		if(q->head < 19){
+			q->head += 1;
+			remaining_elements -= 1;
+		}else{
+			q->head = 0;
+			remaining_elements -= 1;
+		}
+		
 	}
-	pthread_mutex_unlock(mutex);
 }
 
 void* producer(void *ptr){
-	
+	int msgs = 10;
+	for(int i = 0;i<msgs;i++{	
+		pthread_mutex_lock(&mutex);
+		if(prod_cons_queue->remaining_elements == 20) pthread_cond_wait(&condc, &mutex);
+		queue_add(prod_cons_queue, (int)ptr);
+		pthread_mutex_unlock(&mutex);
+	}
 }
 
 void* consumer(void *ptr){
