@@ -63,16 +63,23 @@ void queue_remove( prod_cons_queue *q){
 
 void* producer(void *ptr){
 	int msgs = 10;
-	for(int i = 0;i<msgs;i++{	
+	for(int i = 0;i<msgs;i++){	
 		pthread_mutex_lock(&mutex);
-		if(prod_cons_queue->remaining_elements == 20) pthread_cond_wait(&condc, &mutex);
+		if(prod_cons_queue -> remaining_elements == 20) pthread_cond_wait(&condp, &mutex);
 		queue_add(prod_cons_queue, (int)ptr);
+		if(prod_cons_queue -> remaining_elements == 1)pthread_cond_signal(&condc);
 		pthread_mutex_unlock(&mutex);
 	}
 }
 
 void* consumer(void *ptr){
-	
+	int msgs = 0;
+	if(prod_cons_queue ->remaining_elements == 0) pthread_cond_wait(&condc, &mutex);
+	//there are messages in the queue now
+	int pid = prod_cons_queue -> element[prod_cons_queue -> head];
+	printf("This is a message from thread %d", pid);
+	queue_remove(prod_cons_queue);
+	if(prod_cons_queue -> remaining_elements == 19) pthread_cond_signal(&condp);
 }
 
 
